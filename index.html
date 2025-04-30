@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>8-bit Blues Generator</title>
+  <style>
+    body { font-family: monospace; background: #111; color: #0f0; padding: 20px; }
+    label { display: block; margin: 10px 0; }
+    input[type=range] { width: 100%; }
+  </style>
+</head>
+<body>
+  <h1>🎵 Infinite 8-bit Blues</h1>
+
+  <label>Tempo (BPM): <span id="bpmVal">90</span>
+    <input type="range" id="bpm" min="60" max="180" value="90">
+  </label>
+
+  <label>Key:
+    <select id="key">
+      <option value="C">C</option>
+      <option value="D">D</option>
+      <option value="E">E</option>
+      <option value="F">F</option>
+      <option value="G">G</option>
+      <option value="A">A</option>
+      <option value="B">B</option>
+    </select>
+  </label>
+
+  <fieldset>
+    <legend>Motifs (tick to enable)</legend>
+    <label><input type="checkbox" value="0" checked> Mega Man leap</label>
+    <label><input type="checkbox" value="1" checked> Zelda blues lick</label>
+    <label><input type="checkbox" value="2" checked> Castlevania drop</label>
+    <label><input type="checkbox" value="3" checked> Final phrase</label>
+    <label><input type="checkbox" value="4" checked> Ascending run</label>
+    <label><input type="checkbox" value="5"> Metroid haunt</label>
+    <label><input type="checkbox" value="6"> Sonic spring</label>
+    <label><input type="checkbox" value="7"> Kirby twinkle</label>
+  </fieldset>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    const bpmSlider = document.getElementById('bpm');
+    const bpmVal = document.getElementById('bpmVal');
+    const keySelect = document.getElementById('key');
+    const motifBoxes = document.querySelectorAll('input[type=checkbox]');
+
+    bpmSlider.oninput = () => {
+      bpmVal.textContent = bpmSlider.value;
+      socket.emit('bpm', parseInt(bpmSlider.value));
+    };
+
+    keySelect.onchange = () => {
+      socket.emit('key', keySelect.value);
+    };
+
+    motifBoxes.forEach(box => {
+      box.onchange = () => {
+        const active = Array.from(motifBoxes)
+          .filter(b => b.checked)
+          .map(b => parseInt(b.value));
+        socket.emit('motifs', active);
+      };
+    });
+  </script>
+</body>
+</html>
+
