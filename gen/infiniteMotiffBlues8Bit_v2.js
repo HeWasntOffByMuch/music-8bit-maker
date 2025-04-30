@@ -28,25 +28,25 @@ const CHORDS = [0, 0, 0, 0, 5, 5, 0, 0, 7, 5, 0, 0];
 const BLUES_SCALE = [0, 3, 5, 6, 7, 10];
 const BASE_KEY = 'C';
 
-// NES-style motifs (pitch offsets in semitones) and duration multipliers:
+// NES-style motifs (interval offsets in semitones)
 const MOTIF_BANK = [
-  [[0, 1], [4, 0.5], [7, 1.5]],               // Mega Man leap (more bounce)
-  [[0, 1], [3, 0.5], [5, 0.5], [3, 1]],        // Zelda phrase
-  [[0, 0.5], [5, 1], [7, 0.5], [5, 0.5], [3, 1]], // Castlevania descent
-  [[7, 1], [5, 1], [3, 0.5], [2, 1.5]],        // Bluesy resolution
-  [[0, 0.5], [2, 0.5], [4, 0.5], [5, 0.5], [7, 1]], // Major run
-  [[0, 1], [4, 0.5], [7, 1], [11, 0.5], [12, 2]], // Balatro-style arpeggio
-  [[0, 0.5], [0, 0.25], [-3, 0.25], [0, 1], [5, 0.5]], // Mario intro
-  [[0, 1], [5, 1], [9, 1], [7, 1], [5, 0.5]],  // Zelda theme lift
-  [[0, 0.5], [4, 0.25], [7, 0.5], [9, 0.25], [5, 1], [2, 1]], // Mega Man stage
-  [[0, 0.5], [3, 1], [5, 0.5], [6, 0.5], [8, 1]], // Castlevania battle walk
-  [[0, 1], [-2, 0.25], [-4, 0.25], [-5, 0.5], [-7, 1]], // Sonic descending melody
-  [[0, 0.5], [4, 0.5], [7, 1], [11, 0.5], [12, 0.5], [16, 0.5], [19, 1]], // Final Fantasy prelude
-  [[0, 1], [2, 0.5], [5, 1], [7, 0.5], [9, 0.25]], // GTA: San Andreas funky groove
-  [[0, 1], [7, 0.5], [5, 0.25], [3, 0.5], [2, 1]], // GTA: Vice City synth sweep
-  [[0, 0.5], [3, 0.5], [5, 0.5], [7, 1], [6, 0.5], [4, 0.5]], // GTA IV noir phrase
-  [[0, 1], [5, 0.5], [10, 1], [7, 0.25], [3, 0.5]], // GTA V cinematic
-  [[0, 0.5], [0, 0.5], [3, 1], [5, 0.5], [3, 0.25], [0, 1]] // GTA classic urban loop
+  [0, 4, 7],        // like Mega Man leap
+  [0, 3, 5, 3],     // bluesy Zelda phrase
+  [0, 5, 7, 5, 3],  // descending Castlevania vibe
+  [7, 5, 3, 2],     // closing lick
+  [0, 2, 4, 5, 7],  // ascending major run
+  [0, 4, 7, 11, 12],                     // Balatro-style minor 7 arpeggio
+  [0, 0, 0, -3, 0, 5],                   // Mario intro style motif
+  [0, 5, 9, 7, 5],                       // Zelda theme lift
+  [0, 4, 7, 9, 5, 2],                    // Mega Man stage sequence
+  [0, 3, 5, 6, 8],                       // Castlevania battle walk
+  [0, -2, -4, -5, -7],                   // Sonic descending melody
+  [0, 4, 7, 11, 12, 16, 19],              // Final Fantasy prelude arpeggio
+  [0, 2, 5, 7, 9],                       // GTA: San Andreas funky groove
+  [0, 7, 5, 3, 2, 0],                    // GTA: Vice City synth sweep (simplified)
+  [0, 3, 5, 7, 6, 4],                    // GTA IV noir phrase
+  [0, 5, 10, 7, 3],                      // GTA V cinematic
+  [0, 0, 3, 5, 3, 0]                     // GTA classic urban loop
 ];
 
 function noteFreq(rootOffset, semitoneOffset) {
@@ -79,11 +79,7 @@ function generateMelodyPattern(rootOffset) {
   console.log('enbledMotifs.length', enbledMotifs.length)
   console.log('chosen motif index', randomIndex)
   console.log('motif', motif)
-
-  return motif.map(([semitone, durationMult = 1]) => ({
-    freq: noteFreq(rootOffset, semitone + 12),
-    durationMult: durationMult
-  }));
+  return (motif ?? []).map(semi => noteFreq(rootOffset, semi + 12));
 }
 
 function generateBarSamples(barNum) {
@@ -95,15 +91,15 @@ function generateBarSamples(barNum) {
   const beatSamples = Math.floor(getConfig(clonedState).BEAT_DURATION * getConfig(clonedState).SAMPLE_RATE);
 
   for (let i = 0; i < 4; i++) {
-    const tone1 = noteFreq(rootOffset - 24, 0); // bass
-    const tone2 = noteFreq(rootOffset, 0); // chord root
-    const melodyNote = melody[i % melody.length]; // melody
+    const tone1 = noteFreq(rootOffset - 24, 0);       // bass
+    const tone2 = noteFreq(rootOffset, 0);            // chord root
+    const melodyNote = melody[i % melody.length];     // melody
 
-    for (let j = 0; j < beatSamples * melodyNote.durationMult; j++) {
+    for (let j = 0; j < beatSamples; j++) {
       const currentTime = t;
       const val = 0.15 * squareWave(tone1, currentTime) +
                   0.1 * squareWave(tone2, currentTime) +
-                  0.1 * squareWave(melodyNote.freq, currentTime);
+                  0.1 * squareWave(melodyNote, currentTime);
       const clamped = Math.max(-1, Math.min(1, val));
       samples.push(clamped);
       t += secondsPerSample;
