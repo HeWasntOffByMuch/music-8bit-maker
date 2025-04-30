@@ -31,18 +31,29 @@
   <fieldset>
     <legend>Motifs (tick to enable)</legend>
     <label><input type="checkbox" value="0" checked> Mega Man leap</label>
-    <label><input type="checkbox" value="1" checked> Zelda blues lick</label>
-    <label><input type="checkbox" value="2" checked> Castlevania drop</label>
-    <label><input type="checkbox" value="3" checked> Final phrase</label>
-    <label><input type="checkbox" value="4" checked> Ascending run</label>
-    <label><input type="checkbox" value="5"> Metroid haunt</label>
-    <label><input type="checkbox" value="6"> Sonic spring</label>
-    <label><input type="checkbox" value="7"> Kirby twinkle</label>
+    <label><input type="checkbox" value="1"> Zelda phrase</label>
+    <label><input type="checkbox" value="2"> Castlevania vibe</label>
+    <label><input type="checkbox" value="3"> Closing lick</label>
+    <label><input type="checkbox" value="4"> Ascending major run</label>
+    <label><input type="checkbox" value="5"> Balatro-style minor 7 arpeggio</label>
+    <label><input type="checkbox" value="6"> Mario intro style motif</label>
+    <label><input type="checkbox" value="7"> Zelda theme lift</label>
+    <label><input type="checkbox" value="8"> Mega Man stage</label>
+    <label><input type="checkbox" value="9"> Castlevania battle walk</label>
+    <label><input type="checkbox" value="10"> Sonic descending melody</label>
+    <label><input type="checkbox" value="11"> Final Fantasy prelude arpeggio</label>
+    <label><input type="checkbox" value="12"> GTA: San Andreas funky groove</label>
+    <label><input type="checkbox" value="13"> GTA: Vice City synth sweep</label>
+    <label><input type="checkbox" value="14"> GTA IV noir phrase</label>
+    <label><input type="checkbox" value="15"> GTA V cinematic</label>
+    <label><input type="checkbox" value="16"> GTA classic urban loop</label>
   </fieldset>
 
-  <script src="/socket.io/socket.io.js"></script>
+  <script src="http://localhost:3000/socket.io/socket.io.js"></script>
   <script>
-    const socket = io();
+    const socket = io('http://localhost:3000', {
+      transports: ['websocket']
+    });
     const bpmSlider = document.getElementById('bpm');
     const bpmVal = document.getElementById('bpmVal');
     const keySelect = document.getElementById('key');
@@ -59,6 +70,7 @@
 
     motifBoxes.forEach(box => {
       box.onchange = () => {
+        console.log('Motif changed');
         const active = Array.from(motifBoxes)
           .filter(b => b.checked)
           .map(b => parseInt(b.value));

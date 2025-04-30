@@ -1,12 +1,13 @@
 const express = require('express');
-const http = require('http');
-const socketIO = require('socket.io');
+const { createServer } = require('node:http');
+const { Server } = require('socket.io');
 const path = require('path');
 
 const app = express();
-const server = http.createServer(app);
-const io = socketIO(server);
-
+const server = createServer(app);
+const io = new Server(server, {
+  transports: ['websocket']
+});
 let state = {
   bpm: 90,
   key: 'C',
