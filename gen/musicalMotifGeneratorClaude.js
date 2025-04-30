@@ -297,7 +297,7 @@ function createMotifVariation(motif, variationType = 'random') {
 
 // Generate a basic motif
 const basicMotif = generateMotif();
-console.log("Basic Motif:", JSON.stringify(basicMotif, null, 2));
+// console.log("Basic Motif:", JSON.stringify(basicMotif, null, 2));
 
 // Generate a complex motif with specific options
 const complexMotif = generateMotif({
@@ -308,8 +308,10 @@ const complexMotif = generateMotif({
   contourComplexity: 0.7,
   maxIntervalJump: 5
 });
-console.log("Complex Motif:", JSON.stringify(complexMotif, null, 2));
+// console.log("Complex Motif:", JSON.stringify(complexMotif, null, 2));
 
 // Create a variation of the motif
 const invertedMotif = createMotifVariation(complexMotif, 'inversion');
-console.log("Inverted Motif:", JSON.stringify(invertedMotif, null, 2));
+// console.log("Inverted Motif:", JSON.stringify(invertedMotif, null, 2));
+
+module.exports = { generateMotif, basicMotif, invertedMotif, complexMotif }

@@ -31,25 +31,39 @@
   <fieldset id="motifs">
     <legend>Motifs (tick to enable)</legend>
     <label><input type="checkbox" value="0" checked> Mega Man leap</label>
-    <label><input type="checkbox" value="1" checked> Zelda phrase</label>
-    <label><input type="checkbox" value="2" checked> Castlevania vibe</label>
-    <label><input type="checkbox" value="3" checked> Closing lick</label>
-    <label><input type="checkbox" value="4" checked> Ascending major run</label>
-    <label><input type="checkbox" value="5"> Balatro-style minor 7 arpeggio</label>
-    <label><input type="checkbox" value="6"> Mario intro style motif</label>
-    <label><input type="checkbox" value="7"> Zelda theme lift</label>
+    <label><input type="checkbox" value="1"> Zelda phrase</label>
+    <label><input type="checkbox" value="2"> Castlevania fall</label>
+    <label><input type="checkbox" value="3"> Closing lick</label>
+    <label><input type="checkbox" value="4"> Major run</label>
+    <label><input type="checkbox" value="5"> Balatro minor 7</label>
+    <label><input type="checkbox" value="6"> Mario intro</label>
+    <label><input type="checkbox" value="7"> Zelda theme</label>
     <label><input type="checkbox" value="8"> Mega Man stage</label>
-    <label><input type="checkbox" value="9"> Castlevania battle walk</label>
-    <label><input type="checkbox" value="10"> Sonic descending melody</label>
-    <label><input type="checkbox" value="11"> Final Fantasy prelude arpeggio</label>
-    <label><input type="checkbox" value="12"> GTA: San Andreas funky groove</label>
-    <label><input type="checkbox" value="13"> GTA: Vice City synth sweep</label>
-    <label><input type="checkbox" value="14"> GTA IV noir phrase</label>
+    <label><input type="checkbox" value="9"> Castlevania walk</label>
+    <label><input type="checkbox" value="10"> Sonic descent</label>
+    <label><input type="checkbox" value="11"> Final Fantasy prelude</label>
+    <label><input type="checkbox" value="12"> GTA SA groove</label>
+    <label><input type="checkbox" value="13"> GTA VC sweep</label>
+    <label><input type="checkbox" value="14"> GTA IV noir</label>
     <label><input type="checkbox" value="15"> GTA V cinematic</label>
-    <label><input type="checkbox" value="16"> GTA classic urban loop</label>
-  </fieldset>
+    <label><input type="checkbox" value="16"> GTA classic loop</label>
+    <label><input type="checkbox" value="17"> Epic hero theme (Skyrim)</label>
+    <label><input type="checkbox" value="18"> Dramatic tension builder</label>
+    <label><input type="checkbox" value="19"> Majestic descent</label>
+    <label><input type="checkbox" value="20"> Imperial march inspired (Star Wars)</label>
+    <label><input type="checkbox" value="21"> Triumphant fanfare</label>
+    <label><input type="checkbox" value="22"> Epic quest theme</label>
+    <label><input type="checkbox" value="23"> Adventure rising theme</label>
+    <label><input type="checkbox" value="24"> Mystical arpeggiated theme</label>
+    <label><input type="checkbox" value="25"> Ominous boss theme</label>
+    <label><input type="checkbox" value="26"> Epic battle sequence</label>
+    <label><input type="checkbox" value="27"> Rhythmic groove pattern based on onomatopoeia</label>
+    <label><input type="checkbox" value="28"> Rock-inspired riff with power chord feel</label>
 
-  <label><input type="checkbox" id="enableGeneratedTheme">Enable playering generated theme</label>
+  </fieldset>
+  <label><input type="checkbox" id="enableGeneratedTheme">Enable playing generated theme</label>
+  <br>
+  <label><input type="checkbox" id="useMotifGenerator" checked>Use motif generator</label>
 
   <script src="http://localhost:3000/socket.io/socket.io.js"></script>
   <script>
@@ -61,6 +75,7 @@
     const keySelect = document.getElementById('key');
     const motifBoxes = document.querySelectorAll('#motifs input[type=checkbox]');
     const enableGeneratedTheme = document.getElementById('enableGeneratedTheme');
+    const useMotifGenerator = document.getElementById('useMotifGenerator');
 
     bpmSlider.oninput = () => {
       bpmVal.textContent = bpmSlider.value;
@@ -84,6 +99,11 @@
     enableGeneratedTheme.onchange = () => {
       socket.emit('enableGeneratedTheme', enableGeneratedTheme.checked);
     };
+
+    useMotifGenerator.onchange = () => {
+      socket.emit('useMotifGenerator', useMotifGenerator.checked);
+    };
+
   </script>
 </body>
 </html>
