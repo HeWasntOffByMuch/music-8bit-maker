@@ -39,7 +39,7 @@ node gen/infiniteMotiffBlues8Bit_v2.js
 
 ### Configuration
 
-The application can be configured by modifying the state object in the code:
+The application can be configured by modifying the state object or from UI that runs automatically on localhost:8080
 
 ```javascript
 const state = {
