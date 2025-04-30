@@ -11,7 +11,8 @@ const io = new Server(server, {
 let state = {
   bpm: 90,
   key: 'C',
-  motifs: [0, 1, 2, 3, 4]
+  motifs: [0, 1, 2, 3, 4],
+  appendGeneratedTheme: false,
 };
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -33,6 +34,10 @@ io.on('connection', socket => {
   socket.on('motifs', newMotifs => {
     state.motifs = newMotifs;
     console.log('Motifs changed to', newMotifs);
+  });
+  socket.on('enableGeneratedTheme', newEnable => {
+    state.enableGeneratedTheme = newEnable;
+    console.log('Enable using generated theme changed to:', newEnable);
   });
 });
 

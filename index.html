@@ -28,13 +28,13 @@
     </select>
   </label>
 
-  <fieldset>
+  <fieldset id="motifs">
     <legend>Motifs (tick to enable)</legend>
     <label><input type="checkbox" value="0" checked> Mega Man leap</label>
-    <label><input type="checkbox" value="1"> Zelda phrase</label>
-    <label><input type="checkbox" value="2"> Castlevania vibe</label>
-    <label><input type="checkbox" value="3"> Closing lick</label>
-    <label><input type="checkbox" value="4"> Ascending major run</label>
+    <label><input type="checkbox" value="1" checked> Zelda phrase</label>
+    <label><input type="checkbox" value="2" checked> Castlevania vibe</label>
+    <label><input type="checkbox" value="3" checked> Closing lick</label>
+    <label><input type="checkbox" value="4" checked> Ascending major run</label>
     <label><input type="checkbox" value="5"> Balatro-style minor 7 arpeggio</label>
     <label><input type="checkbox" value="6"> Mario intro style motif</label>
     <label><input type="checkbox" value="7"> Zelda theme lift</label>
@@ -49,6 +49,8 @@
     <label><input type="checkbox" value="16"> GTA classic urban loop</label>
   </fieldset>
 
+  <label><input type="checkbox" id="enableGeneratedTheme">Enable playering generated theme</label>
+
   <script src="http://localhost:3000/socket.io/socket.io.js"></script>
   <script>
     const socket = io('http://localhost:3000', {
@@ -57,7 +59,8 @@
     const bpmSlider = document.getElementById('bpm');
     const bpmVal = document.getElementById('bpmVal');
     const keySelect = document.getElementById('key');
-    const motifBoxes = document.querySelectorAll('input[type=checkbox]');
+    const motifBoxes = document.querySelectorAll('#motifs input[type=checkbox]');
+    const enableGeneratedTheme = document.getElementById('enableGeneratedTheme');
 
     bpmSlider.oninput = () => {
       bpmVal.textContent = bpmSlider.value;
@@ -77,6 +80,10 @@
         socket.emit('motifs', active);
       };
     });
+
+    enableGeneratedTheme.onchange = () => {
+      socket.emit('enableGeneratedTheme', enableGeneratedTheme.checked);
+    };
   </script>
 </body>
 </html>

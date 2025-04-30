@@ -2,6 +2,7 @@
 const Speaker = require('speaker');
 const { Readable } = require('stream');
 const { state } = require('../server.js');
+const { generateMusicalTheme } = require('./musicalThemeGenerator')
 
 const getConfig = (state) => {
   const beatDuration = 60 / state.bpm;
@@ -11,6 +12,7 @@ const getConfig = (state) => {
     BEAT_DURATION: beatDuration,
     BAR_DURATION: beatDuration * 4,
     CHANNELS: 1,
+    ENABLE_GENERATED_THEME: state.enableGeneratedTheme,
   }
 }
 
@@ -27,6 +29,15 @@ const NOTES = {
 const CHORDS = [0, 0, 0, 0, 5, 5, 0, 0, 7, 5, 0, 0];
 const BLUES_SCALE = [0, 3, 5, 6, 7, 10];
 const BASE_KEY = 'C';
+
+const theme = generateMusicalTheme({
+  motifCount: 4,
+  phraseLength: 4,
+  scale: [0, 2, 3, 5, 7, 9, 10], // Dorian for moody vibe
+  contourBias: 'mixed'
+});
+
+console.log('theme', theme)
 
 // NES-style motifs (interval offsets in semitones)
 const MOTIF_BANK = [
@@ -73,10 +84,18 @@ let t = 0;
 let barIndex = 0;
 
 function generateMelodyPattern(rootOffset) {
-  const enbledMotifs = MOTIF_BANK.filter((motif, index) => state.motifs.includes(index));
-  const randomIndex = Math.floor(Math.random() * enbledMotifs.length)
-  const motif = enbledMotifs[randomIndex];
-  console.log('enbledMotifs.length', enbledMotifs.length)
+  const usedMotifs = [];
+  const enabledMotifs = MOTIF_BANK.filter((motif, index) => state.motifs.includes(index));
+  const appendGeneratedTheme = getConfig(state).ENABLE_GENERATED_THEME;
+
+  usedMotifs.push(...enabledMotifs);
+  if (appendGeneratedTheme) {
+    usedMotifs.push(...theme);
+  }
+
+  const randomIndex = Math.floor(Math.random() * usedMotifs.length)
+  const motif = usedMotifs[randomIndex];
+  console.log('usedMotifs.length', usedMotifs.length)
   console.log('chosen motif index', randomIndex)
   console.log('motif', motif)
   return (motif ?? []).map(semi => noteFreq(rootOffset, semi + 12));
